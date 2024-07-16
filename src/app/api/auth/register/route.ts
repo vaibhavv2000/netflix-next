@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   if(rows[0]) return NextResponse.json({message: "Email already exists"}, {status: 400});
 
   await pg.query(query, values);
-  cookies().set("netflix-user",{email, name});
+  cookies().set("netflix-user",JSON.stringify({email, name}));
   return NextResponse.json({email,name},{status: 201});
  } catch (error) {
   return NextResponse.json(error, {status: 500});

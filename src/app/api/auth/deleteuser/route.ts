@@ -3,7 +3,7 @@ import {cookies} from "next/headers";
 import {NextResponse} from "next/server";
 
 export async function DELETE() {
- const user = cookies().get("netflix-user") as any;
+ const user = JSON.parse(cookies().get("netflix-user") as any);
  
  try {
   await pg.query(`DELETE FROM users WHERE email = $1`, [user?.value?.email]);

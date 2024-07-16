@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   if(rows[0].password !== password) {
    return NextResponse.json({message: "Wrong PWD"}, {status: 400});
   };
-  cookies().set("netflix-user",rows[0]);
+  cookies().set("netflix-user",JSON.stringify(rows[0]));
   return NextResponse.json({email, name: rows[0].name},{status: 200});
  } catch (error) {
   return NextResponse.json(error, {status: 500});
