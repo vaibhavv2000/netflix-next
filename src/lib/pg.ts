@@ -1,11 +1,13 @@
 import {Pool} from "pg";
 
+const {DB_NAME, DB_PORT, DB_USER, DB_HOST, DB_PWD} = process.env;
+
 const pg = new Pool({
-  host: "localhost",
-  port: 5432,
-  user: "postgres",
-  password: "vaibhavk15",
-  database: "netflix",
+  host: DB_HOST,
+  port: Number(DB_PORT),
+  user: DB_USER,
+  password: DB_PWD,
+  database: DB_NAME,
 });
 
 pg.on("connect", () => console.log("DB_CONNECTED"));

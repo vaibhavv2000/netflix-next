@@ -111,7 +111,7 @@ const addMovies = () => {
  }
 };
 
-export async function GET(req: NextRequest) {
+export async function GET() {
  try {
   await pg.query(db);
   await pg.query(users);
