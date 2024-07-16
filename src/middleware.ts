@@ -4,7 +4,7 @@ import {NextRequest} from 'next/server'
 
 export function middleware(request: NextRequest) {
  let pathname = request.nextUrl.pathname;
- const cookie = JSON.parse(cookies().get("netflix-user") as any);
+ const cookie = cookies().get("netflix-user") as any;
 
  if(["/", "/register"].includes(pathname)) {
   if(cookie) return NextResponse.redirect(new URL('/home',request.url));
