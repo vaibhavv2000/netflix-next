@@ -113,7 +113,7 @@ const addMovies = () => {
 
 export async function GET() {
  try {
-  await pg.query(db);
+  // await pg.query(db);
   await pg.query(users);
   await pg.query(movies_table);
   await pg.query(userMoviesList);
