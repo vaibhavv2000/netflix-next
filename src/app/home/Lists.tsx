@@ -5,7 +5,7 @@ import {SlArrowLeft,SlArrowRight} from "react-icons/sl";
 import {Typography} from "@mui/material";
 import {useAppSelector} from "@/lib/redux";
 
-var arrow = "absolute h-full w-14 bg-[rgba(0,0,0,0.5)] md:!grid place-items-center z-[999999] hidden top-0";
+let arrow = "absolute h-full w-14 bg-[rgba(0,0,0,0.5)] md:!grid place-items-center z-[999999] hidden top-0";
 
 interface props {
  title: string;
@@ -13,30 +13,30 @@ interface props {
 }
 
 const Lists = (props: props) => {
- const {title,setPos} = props;
- const [movies,setMovies] = useState<movie[]>([]);
- const [slideNum,setSlideNum] = useState<number>(0);
+ const {title, setPos} = props;
+ const [movies, setMovies] = useState<movie[]>([]);
+ const [slideNum, setSlideNum] = useState<number>(0);
 
  const moviesRef = useRef<HTMLDivElement>(null);
- const {moviesList,myList} = useAppSelector(state => state.movie);
+ const {moviesList, myList} = useAppSelector(state => state.movie);
 
  const slide = (opt: "left" | "right") => {
-  const {width} = moviesRef.current?.getBoundingClientRect() as any;
+  const {width} = moviesRef.current?.getBoundingClientRect() as DOMRect;
 
-  if(opt === "left" && slideNum > 0) {
-   setSlideNum((p) => p - 200);
-  } else if(opt === "right" && slideNum < width + 300) {
-   setSlideNum((p) => p + 200);
-  }
+  if(opt === "left" && slideNum > 0) setSlideNum((p) => p - 200);
+  if(opt === "right" && slideNum < width + 300) setSlideNum((p) => p + 200);
  };
 
  useEffect(() => {
-  if(title === "My List" && movies.length < 1) setMovies(myList);
-  else if(movies.length < 1) setMovies(moviesList);
- }, [movies, moviesList]);
+  if(title !== "My List") setMovies([...moviesList].sort((a,b) => Math.random() - 0.5));
+ }, [moviesList]);
+
+ useEffect(() => {
+  if(title === "My List") setMovies(myList);
+ }, [myList]);
 
  return (
- <div className="p-3 transition-all" onMouseEnter={() => setPos(null)}>
+  <div className="p-3 transition-all" onMouseEnter={() => setPos(null)}>
    <Typography variant="h6" className="text-white" sx={{my: 1}}>
     {title}
    </Typography>
@@ -57,12 +57,9 @@ const Lists = (props: props) => {
      onBlur={() => setPos(null)}
     >
      {!movies.length && <div>
-       <h1 className="text-red-600 font-medium text-3xl">List Empty</h1>
+      <h1 className="text-red-600 font-medium text-3xl">List Empty</h1>
       </div>}
-     {movies.length && [...movies]
-      .sort((a,b) => Math.random() - 0.5)
-      .map((m) => <ListMovie key={Math.random()} movie={m} setPos={setPos} />)
-     }
+     {movies.length > 0 ? movies.map((m) => <ListMovie key={`${m.id}-movie`} movie={m} setPos={setPos} />) : null}
     </div>
     {movies.length > 3 && (
      <div className={`${arrow} right-0`}>

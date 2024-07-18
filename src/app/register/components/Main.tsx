@@ -7,6 +7,7 @@ import {useAppDispatch} from "@/lib/redux";
 import {login} from "@/redux/slices/userSlice";
 import {API} from "@/lib/API";
 import {useRouter} from "next/navigation";
+import Loader from "@/components/Loader";
 
 const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
@@ -14,6 +15,7 @@ const Main = () => {
  const [user,setUser] = useState({email: "",password: "",name: ""});
  const [showPwd,setShowPWd] = useState<boolean>(false);
  const [error,setError] = useState<string>("");
+ const [loading, setLoading] = useState(false);
 
  const dispatch = useAppDispatch();
  const {push} = useRouter();
@@ -33,18 +35,19 @@ const Main = () => {
   if(!validateEmail(email)) return setError("Enter a valid email");
   if(password.length < 6) return setError("Password should be minimum 6 characters");
 
+  setLoading(true);
+
   try {
    const res = await API.post("/auth/register", user);
-   if(res.status === 201) {
-    localStorage.setItem("netflix-user", JSON.stringify({name, email}));
-    dispatch(login({name, email}));
-    push("/home");
-   } else {
-    setError(res.data.message);
-   }
+   localStorage.setItem("netflix-user", JSON.stringify({name, email}));
+   dispatch(login({name, email}));
+   push("/home");
+   setError(res.data.message);
   } catch (error: any) {
    setError(error.response.data.message);
-  }
+  } finally {
+   setLoading(false); 
+  };
  };
 
  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -93,8 +96,8 @@ const Main = () => {
      </span>
     </div>
     {error && <p className="text-red-600 text-sm -my-3 font-semibold">{error}</p>}
-    <button className="bg-[red] text-white border-none font-lora outline-none p-2.5 font-bold">
-     Register
+    <button className="bg-[red] text-white border-none font-lora flex items-center outline-none p-2.5 font-bold justify-center gap-2">
+     Register {loading && <span className="scale-75"><Loader color="#fff" scale={0.4} /></span>}
     </button>
     <p className="-my-2 text-center text-sm text-white">
      <span className="mr-2 text-white/80">Already have an Account?</span>

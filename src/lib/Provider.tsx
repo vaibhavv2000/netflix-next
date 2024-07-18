@@ -16,9 +16,9 @@ function Provider({children}:props) {
  
  return (
   <ReduxProvider store={storeRef.current}>
-    <Child>
-     {children}
-    </Child>
+   <Child>
+    {children}
+   </Child>
   </ReduxProvider>
  );
 };

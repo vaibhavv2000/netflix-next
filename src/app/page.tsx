@@ -5,12 +5,6 @@ export const metadata: Metadata = {
   title: "Sign In"
 }
 
-const Page = () => {
-  return (
-    <>
-      <Main />
-    </>
-  )
-}
+const Page = () => <Main />;
 
 export default Page

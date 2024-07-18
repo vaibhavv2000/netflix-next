@@ -1,32 +1,31 @@
-import {Client,Pool} from "pg";
+import {Client} from "pg";
 
-const {DB_NAME,DB_PORT,DB_USER,DB_HOST,DB_PWD} = process.env;
+const {MODE} = process.env;
 
-let local = {
- host: "postgres",
- port: 5432,
- database: "netflix",
- user: "postgres",
- password: "vaibhavk15"
+let config = {} as any;
+
+if(MODE === "dev") {
+ const {DB_NAME,DB_PORT,DB_USER,DB_HOST,DB_PWD,} = process.env;
+
+ config = {
+  host: DB_HOST,
+  port: DB_PORT,
+  database: DB_NAME,
+  user: DB_USER,
+  password: DB_PWD
+ };
 };
 
-const prod = {
- host: "postgresql://netflix:29nzrH5cyeVXJFjBls7HflufRVS20rsd@dpg-cqbmjkuehbks73dquro0-a/netflix_j4a2",
- port: 5432,
- user: "netflix",
- password: '29nzrH5cyeVXJFjBls7HflufRVS20rsd',
- database: 'netflix_j4a2',
- connectionString: "postgresql://netflix:29nzrH5cyeVXJFjBls7HflufRVS20rsd@dpg-cqbmjkuehbks73dquro0-a.oregon-postgres.render.com/netflix_j4a2"
+if(MODE === "prod") {
+ const {DB_URL} = process.env;
+
+ config = {
+  connectionString: DB_URL,
+  ssl: {rejectUnauthorized: false,}
+ };
 };
 
-const pg = new Client({
- ...prod,
- ssl: {rejectUnauthorized: false}
-});
-
-pg.connect(() => {
- console.log("CONNECTED_TO_PG");
-});
+const pg = new Client(config);
 
 pg.on("error",(err) => console.log(err));
 

@@ -7,11 +7,13 @@ import {useAppDispatch} from "@/lib/redux";
 import {login} from "@/redux/slices/userSlice";
 import {API} from "@/lib/API";
 import {useRouter} from "next/navigation";
+import Loader from "@/components/Loader";
 
 const Main = () => {
  const [user,setUser] = useState({email: "",password: ""});
  const [showPwd,setShowPWd] = useState<boolean>(false);
  const [error,setError] = useState<string>("");
+ const [loading, setLoading] = useState(false);
 
  const dispatch = useAppDispatch();
  const {push} = useRouter();
@@ -25,6 +27,8 @@ const Main = () => {
   const {email,password} = user;
   if(!email || !password) return setError("All fields are required");
 
+  setLoading(true);
+
   try {
    const res = await API.post("/auth/login", user);
    if(res.status === 200) {
@@ -32,13 +36,15 @@ const Main = () => {
     localStorage.setItem("netflix-user", JSON.stringify({name, email}));
     dispatch(login({name, email}));
     push("/home");
-   }
+   };
    
    if(res.status === 404) return setError("No email found");
    if (res.status === 400) return setError("Wrong password");
   } catch (error: any) {
    setError(error.response.data.message);
-  }
+  } finally {
+   setLoading(false); 
+  };
  };
 
  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,8 +87,8 @@ const Main = () => {
      </span>
     </div>
     {error && <p className="text-red-600 text-sm -my-3 font-semibold">{error}</p>}
-    <button className="bg-[red] text-white border-none font-lora outline-none p-2.5 font-bold">
-     Login
+    <button className="bg-[red] text-white border-none font-lora flex items-center outline-none p-2.5 font-bold justify-center gap-2">
+     Login {loading && <span className="scale-75"><Loader color="#fff" scale={0.4} /></span>}
     </button>
     <p className="-my-2 text-center text-sm text-white">
      <span className="mr-2 text-white/80">Don&apos;t have an Account?</span>

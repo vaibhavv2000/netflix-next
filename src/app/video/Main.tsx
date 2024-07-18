@@ -63,10 +63,11 @@ const Video = ({id}: {id: string}) => {
     dispatch(addMovieToMyList(movie));
     setIsInList(true);
     await API.post("/movie/addtowishlist",{email,movieId});
-   }
+   };
+
   } catch(error: any) {
    console.log("Error",error.response.data);
-  }
+  };
  };
 
  return (

@@ -8,6 +8,7 @@ import {logout} from "@/redux/slices/userSlice";
 import {API} from "@/lib/API";
 import {useAppDispatch} from "@/lib/redux";
 import {useRouter} from "next/navigation";
+import {emptyMyList} from "@/redux/slices/movieSlice";
 
 var link = "text-white font-[600] cursor-pointer hover:underline";
 var authLink = "text-white text-[13px] font-medium text-center cursor-pointer hover:opacity-70";
@@ -38,6 +39,7 @@ const Navbar = () => {
 
  const logout_user = async () => {
   dispatch(logout());
+  dispatch(emptyMyList());
   localStorage.removeItem("netflix-user");
 
   try {
@@ -45,7 +47,7 @@ const Navbar = () => {
    if(res.data === "Logged out") push("/");
   } catch (error) {
    console.log("SOME ERROR");
-  }
+  };
  };
 
  var nav = `flex items-center bg-[rgba(0,0,0,0.0155555)] justify-between fixed top-0 w-full lg:px-10 z-[9999999999] px-3 md:px-7 ${scrolled ? "bg-black" : "bg-[rgba(0,0,0,0.0155555)]"}`;
@@ -62,11 +64,11 @@ const Navbar = () => {
      quality={1}
     />
     <ul className="hidden md:!flex items-center space-x-4">
-     {navOptions.map((path,index) => (
-      <Typography variant="body2" className={link} key={`${path}-${index}`}>
-       {path}
-      </Typography>
-     ))}
+    {navOptions.map((path,index) => (
+     <Typography variant="body2" className={link} key={`${path}-${index}`}>
+      {path}
+     </Typography>
+    ))}
     </ul>
    </div>
    <div className="flex items-center space-x-4">

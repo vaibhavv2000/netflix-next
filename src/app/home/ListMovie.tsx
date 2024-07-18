@@ -3,11 +3,11 @@ import {movie} from "./Featured";
 import Image from "next/image";
 import Link from "next/link";
 
-var thumbnail = `h-60 w-40 md:h-40 md:w-[270px] rounded-md hover:opacity-60 cursor-pointer relative`;
+let thumbnail = `h-60 w-40 md:h-40 md:w-[270px] rounded-md hover:opacity-60 cursor-pointer relative`;
 
 interface props {
-  movie: movie;
-  setPos: React.Dispatch<SetStateAction<any>>;
+ movie: movie;
+ setPos: React.Dispatch<SetStateAction<any>>;
 };
 
 const ListMovie = (props: props) => {

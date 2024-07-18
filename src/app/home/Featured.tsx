@@ -4,42 +4,70 @@ import {GoPlus} from "react-icons/go";
 import {FaPlay} from "react-icons/fa";
 import {Button,Typography} from "@mui/material";
 import Link from "next/link";
+import {FiMinus} from "react-icons/fi";
 import Navbar from "./Navbar";
-import {useAppSelector} from "@/lib/redux";
+import {useAppDispatch, useAppSelector} from "@/lib/redux";
+import {addMovieToMyList, removeMovie} from "@/redux/slices/movieSlice";
+import {API} from "@/lib/API";
 
 export interface movie {
-  description: string;
-  genre: string;
-  id: number;
-  length: number;
-  movie_name: string;
-  pg: boolean;
-  rating: number;
-  release_year: number;
-  thumbnail: string;
-  title_img: string;
-  type: string;
+ id: number;
+ description: string;
+ genre: string;
+ length: number;
+ movie_name: string;
+ pg: boolean;
+ rating: number;
+ release_year: number;
+ thumbnail: string;
+ title_img: string;
+ type: string;
 };
 
 export interface state {
-  x: number;
-  y: number;
-  movie: movie;
+ x: number;
+ y: number;
+ movie: movie;
 };
 
 interface props {
-  setPos?: React.Dispatch<React.SetStateAction<state | null>>;
+ setPos?: React.Dispatch<React.SetStateAction<state | null>>;
 };
 
 const Featured = ({setPos}: props): JSX.Element => {
  const [movie,setMovie] = useState<movie | null>();
- const {moviesList} = useAppSelector(state => state.movie);
+ const {moviesList, myList} = useAppSelector(state => state.movie);
+ const [isInMyList, setIsInMyList] = useState(false);
+ const email = useAppSelector(state => state.user.user?.email);
+
+ const dispatch = useAppDispatch();
 
  useEffect(() => {
   const movies = [...moviesList];
   const movie = movies[Math.floor(Math.random() * movies.length)];
   setMovie(movie);
+
  },[moviesList]);
+
+ useEffect(() => {
+  if(!movie) return;
+
+  const movieExists = myList.find(item => item.id === movie.id);
+  if(movieExists) setIsInMyList(true);
+  else setIsInMyList(false);
+ }, [myList, movie]);
+ 
+ const updateMyList = async (opt: "add" | "remove") => {
+  if(!movie) return;
+
+  if(opt === "add") {
+   dispatch(addMovieToMyList(movie));
+   await API.post("/movie/addtowishlist",{email,movieId: movie.id});
+  } else {
+   dispatch(removeMovie(movie.id));
+   await API.post("/movie/removefromwishlist",{email,movieId: movie.id});
+  };
+ };
 
  if(!movie) return <Navbar />;
 
@@ -74,7 +102,8 @@ const Featured = ({setPos}: props): JSX.Element => {
        size="large"
        // sx={{background: "#999","&:hover": {background: "#999"}}}
        sx={{backgroundColor: "#888"}}
-       startIcon={<GoPlus size={23} color={"#fff"} />}
+       onClick={() => updateMyList(isInMyList ? "remove" : "add")}
+       startIcon={isInMyList ? <FiMinus size={23} color={"#fff"} /> : <GoPlus size={23} color={"#fff"} />}
       >
        MY LIST
       </Button>
@@ -82,7 +111,7 @@ const Featured = ({setPos}: props): JSX.Element => {
     </div>
     <Image
      src={movie.thumbnail}
-     alt=""
+     alt={movie.movie_name}
      fill
      className="h-full w-full object-cover"
     />

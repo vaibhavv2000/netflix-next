@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   const values = [name, email, password];
 
   await pg.query(query, values);
-  cookies().set("netflix-usertt",JSON.stringify({email, name}));
+  cookies().set("netflix-user",JSON.stringify({email, name}));
   return NextResponse.json({email,name},{status: 201});
  } catch (error) {
   return NextResponse.json(error, {status: 500});

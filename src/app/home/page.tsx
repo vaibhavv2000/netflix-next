@@ -5,12 +5,6 @@ export const metadata: Metadata = {
  title: "Home"
 };
 
-const page = () => {
- return (
-  <main>
-   <Main />
-  </main>
- );
-};
+const page = () => <Main />;
 
 export default page;

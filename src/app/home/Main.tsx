@@ -7,6 +7,7 @@ import MovieCard from "./MovieCard";
 import {API} from "@/lib/API";
 import {addMovies, addMyList} from "@/redux/slices/movieSlice";
 import {useAppDispatch, useAppSelector} from "@/lib/redux";
+import Loader from "@/components/Loader";
 
 let lists = [
 "Featured Movies","New Releases","Popular Movies","Horror Thriller","Comedy Movies","My List"
@@ -55,11 +56,14 @@ const Main = () => {
  },[moviesList]);
 
  return (
-  <div className="bg-black" style={{maxWidth: "2350px",margin: "auto"}}>
-   <Featured setPos={setPos} />
-   {moviesList.length && lists.map((l: string,i: number) => <Lists title={l} setPos={setPos} key={String(`r${i}`)} />)}
-   {pos && <MovieCard pos={pos} />}
-  </div>
+  <main className="bg-black" style={{maxWidth: "2350px",margin: "auto"}}>
+   {moviesList.length ? <>
+    <Featured setPos={setPos} />
+    {moviesList.length && lists.map((l: string,i: number) => <Lists title={l} setPos={setPos} key={`list-${i}`} />)}
+    {pos && <MovieCard pos={pos} />}
+    </> : <div className="grid place-items-center h-screen"><Loader /></div>
+   }
+  </main>
  );
 };
 

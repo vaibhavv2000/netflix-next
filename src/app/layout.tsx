@@ -16,17 +16,17 @@ interface props {
 }
 
 function RootLayout({children}: Readonly<props>) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Provider>
-          <AppRouterCacheProvider>
-            {children}
-          </AppRouterCacheProvider>
-        </Provider>
-      </body>
-    </html>
-  );
+ return (
+  <html lang="en">
+   <body className={inter.className}>
+    <Provider>
+     <AppRouterCacheProvider>
+      {children}
+     </AppRouterCacheProvider>
+    </Provider>
+   </body>
+  </html>
+ );
 }
 
 export default RootLayout;

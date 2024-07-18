@@ -5,7 +5,7 @@ export async function GET(req:NextRequest) {
  const email = req.nextUrl.searchParams.get("email");
 
  if(!email) {
-   return NextResponse.json({message: "All fields are required"},{status:400});
+  return NextResponse.json({message: "All fields are required"},{status:400});
  };
 
  try {
@@ -20,5 +20,5 @@ export async function GET(req:NextRequest) {
   return NextResponse.json(movies,{status: 200});
  } catch (error) {
   return NextResponse.json({message:error},{status:500});
- }
-}
+ };
+};
