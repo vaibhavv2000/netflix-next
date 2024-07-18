@@ -1,6 +1,6 @@
 import {movie, movies} from "@/lib/moviesList";
 import pg from "@/lib/pg";
-import {NextRequest, NextResponse} from "next/server";
+import {NextResponse} from "next/server";
 
 const db = `
  DO $$
@@ -62,29 +62,6 @@ const userMoviesList = `
 
 const createIndex = `CREATE INDEX email_index ON usermovieslist(email)`;
 
-const add = () => {
- let str = ``;
-  
- for (let i of movies.slice(0,1)) {
-  str += `(`
-  for(let j in i) {
-    if(j === "description") str += i[j]
-    // @ts-ignore
-   else str += i[j] + ", ";
-  }
-  str += `)`
- };
- 
- return str;
-};
-
-const list = add();
-
-const add_movies = `INSERT INTO movies 
-(movie_name, release_year, thumbnail, rating, length, 
-title_img, pg, type, genre, description)
-VALUES ${list}`;
-
 const addMovies = () => {
  for(let i of movies) {
   const fun = async (m: movie) => { 
@@ -104,8 +81,8 @@ const addMovies = () => {
     console.log("ADDED MOVIE");
    } catch (error) {
     console.log("ERROR",error);
-   }
-  }
+   };
+  };
 
   fun(i);
  }
@@ -114,15 +91,15 @@ const addMovies = () => {
 export async function GET() {
  try {
   // await pg.query(db);
-  await pg.query(users);
-  await pg.query(movies_table);
-  await pg.query(userMoviesList);
-  await pg.query(createIndex);
-  await pg.query(add_movies);
-  addMovies();
+  // await pg.query(users);
+  // await pg.query(movies_table);
+  // await pg.query(userMoviesList);
+  // await pg.query(createIndex);
+  // await pg.query(add_movies);
+  // addMovies();
 
   return NextResponse.json({message: "Data created"}, {status: 201});
  } catch(error) {
-  return NextResponse.json(error,{status:  500});
+  return NextResponse.json(error,{status: 500});
  }
 };

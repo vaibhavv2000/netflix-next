@@ -55,16 +55,16 @@ const Navbar = () => {
    <div className="flex items-center space-x-5 z-[83838833]">
     <Image
      src={"https://assets.stickpng.com/images/580b57fcd9996e24bc43c529.png"}
-     alt=""
+     alt={"Official_logo"}
      width={160}
      height={10}
      style={{height: "80px"}}
      quality={1}
     />
     <ul className="hidden md:!flex items-center space-x-4">
-     {navOptions.map((l) => (
-      <Typography variant="body2" className={link} key={String(l + Math.random())}>
-       {l}
+     {navOptions.map((path,index) => (
+      <Typography variant="body2" className={link} key={`${path}-${index}`}>
+       {path}
       </Typography>
      ))}
     </ul>

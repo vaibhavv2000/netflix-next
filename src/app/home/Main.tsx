@@ -13,9 +13,9 @@ let lists = [
 ];
 
 export interface state {
-  x: number;
-  y: number;
-  movie: movie;
+ x: number;
+ y: number;
+ movie: movie;
 };
 
 const Main = () => {
@@ -47,8 +47,8 @@ const Main = () => {
     dispatch(addMovies(data[0]));
     dispatch(addMyList(data[1]));
    } catch(error: any) {
-     console.log("ERROR",error);
-   }
+    console.log("ERROR",error);
+   };
   };
 
   if(moviesList.length < 1) fetcher();

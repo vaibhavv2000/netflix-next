@@ -12,12 +12,14 @@ import {useAppDispatch, useAppSelector} from "@/lib/redux";
 import {useRouter} from "next/navigation";
 import Recommendations from "./Recommendations";
 import {addMovieToMyList, removeMovie} from "@/redux/slices/movieSlice";
+import Image from "next/image";
 
 const Video = ({id}: {id: string}) => {
  const [movie,setMovie] = useState<movie>();
  const [isInList,setIsInList] = useState<boolean>(false);
  const [play,setPlay] = useState<boolean>(false);
  const [randomMovies,setRandomMovies] = useState<movie[]>([]);
+ const [isHovered, setIsHovered] = useState(false);
 
  const {push} = useRouter();
 
@@ -47,7 +49,7 @@ const Video = ({id}: {id: string}) => {
   setRandomMovies(rM);
 
   document.title = `Movie - ${getMovie?.movie_name}`;
- }, [myList, moviesList, id]);
+ }, [moviesList, id]);
 
  const handleMovie = async (like: boolean,id: number) => {
   const movieId = id;
@@ -68,8 +70,24 @@ const Video = ({id}: {id: string}) => {
  };
 
  return (
-  <div className="bg-black min-h-screen">
-   <div className="h-80 md:h-[500px] lg:h-[700px]">
+  <main className="bg-black min-h-screen">
+   <div 
+    className="h-80 md:h-[500px] lg:h-[700px]" 
+    onMouseOver={() => setIsHovered(true)} 
+    onMouseOut={() => setIsHovered(false)}
+   >
+    {isHovered && <div className="hover:visible sm:py-1 absolute top-0 left-0">
+     <Image
+      src={"https://assets.stickpng.com/images/580b57fcd9996e24bc43c529.png"}
+      alt={"Official_logo"}
+      width={160}
+      height={10}
+      style={{height: "80px"}}
+      quality={1}
+      className="cursor-pointer scale-75 sm:scale-100"
+      onClick={() => push("/home")}
+     />
+    </div>}
     {play ? (
      <video src="https://player.vimeo.com/external/325310326.sd.mp4?s=b2285047311c7d6d8cc2bfc0c62704563b630c65&profile_id=164&oauth2_token_id=57447761" autoPlay controls className="w-full h-full"></video>
     ) : (
@@ -149,12 +167,10 @@ const Video = ({id}: {id: string}) => {
    </div>
    {/*  */}
    <div className="p-5 flex flex-col space-y-4">
-    <Typography className="text-white" variant="h4" sx={{mb: 2}}>
-     Recommendations For You
-    </Typography>
+    <h2 className="text-2xl mb:text-3xl font-medium font-inter text-white">Recommendations For You</h2>
     <Recommendations randomMovies={randomMovies} />
    </div>
-  </div>
+  </main>
  );
 };
 

@@ -11,18 +11,18 @@ const Recommendations = ({randomMovies}: props) => {
  return (
   <div>
    {randomMovies.map((m) => (
-    <Link href={{ pathname: "/video", query: {id: m.id},}} key={String(m.id)}>
-     <div className="flex items-start space-x-4 my-4 hover:bg-[rgba(255,255,255,0.1)]">
+    <Link href={{ pathname: "/video", query: {id: m.id},}} key={`rm-${m.id}`}>
+     <div className="flex bg-[#121212] rounded-md gap-2 sm:bg-black items-center sm:items-start flex-col sm:flex-row space-x-4 my-4 hover:bg-[#0f0f0f] overflow-hidden sm:rounded-none">
       <img
        src={m.thumbnail}
        alt={m.movie_name}
-       className="h-14 w-14 md:h-20 md:w-20 object-cover"
+       className="h-32 w-full sm:h-14 sm:w-14 md:h-20 md:w-20 object-cover"
       />
-      <div className="">
+      <div className="p-2 sm:p-0">
        <Typography className="text-white" variant="h6">
         {m.movie_name}
        </Typography>
-       <Typography className="text-white/80" variant="body2">
+       <Typography className="text-white/80 sm:text-left" variant="body2">
         {m.description}
        </Typography>
       </div>
