@@ -97,7 +97,7 @@ const Main = () => {
     </div>
     {error && <p className="text-red-600 text-sm -my-3 font-semibold">{error}</p>}
     <button className="bg-[red] text-white border-none font-lora flex items-center outline-none p-2.5 font-bold justify-center gap-2">
-     Register {loading && <span className="scale-75"><Loader color="#fff" scale={0.4} /></span>}
+     Register {loading && <span className="scale-50"><Loader color="#fff" scale={0.4} /></span>}
     </button>
     <p className="-my-2 text-center text-sm text-white">
      <span className="mr-2 text-white/80">Already have an Account?</span>
