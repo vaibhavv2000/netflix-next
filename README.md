@@ -1,8 +1,8 @@
 # Official Website - https://netflix-next-pearl.vercel.app/home
 
-# netflix fullstack application created using Next.js 14
+# netflix fullstack application created using NextJS 14
 
-# Tech stack includes Next.js 14 + PostgreSQL + Typescript + tailwindCSS
+# Tech stack includes NextJS 14 + PostgreSQL + Typescript + tailwindCSS
 
 # PostgreSQL database is used to store data
 
