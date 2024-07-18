@@ -13,6 +13,6 @@ export async function POST(req: NextRequest) {
   await pg.query(query,[email,movieId]);
   return NextResponse.json({message: "Removed"},{status: 200});
  } catch(error) {
-  return NextResponse.json({message:error},{status:500});
+  return NextResponse.json(error,{status:500});
  }
 }

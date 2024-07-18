@@ -7,6 +7,6 @@ export async function GET() {
   const random_movies = await pg.query(query);
   return NextResponse.json(random_movies.rows,{status: 200});
  } catch(error) {
-  return NextResponse.json({message:error},{status: 500});
- }
+  return NextResponse.json(error,{status: 500});
+ };
 };
