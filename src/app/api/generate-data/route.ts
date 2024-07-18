@@ -85,7 +85,7 @@ const addMovies = () => {
   };
 
   fun(i);
- }
+ };
 };
 
 export async function GET() {
