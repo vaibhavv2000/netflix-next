@@ -59,6 +59,7 @@ const Navbar = () => {
      src={"https://assets.stickpng.com/images/580b57fcd9996e24bc43c529.png"}
      alt={"Official_logo"}
      width={160}
+     className="cursor-pointer"
      height={10}
      style={{height: "80px"}}
      quality={1}

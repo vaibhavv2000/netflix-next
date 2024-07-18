@@ -1,31 +1,20 @@
 import {Client} from "pg";
 
-const {MODE} = process.env;
+const {DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PWD, DB_URL} = process.env;
 
-let config = {} as any;
+const pg = new Client({
+ host: DB_HOST,
+ port: Number(DB_PORT),
+ user: DB_USER,
+ database: DB_NAME,
+ password: DB_PWD,
+ connectionString: DB_URL,
+ ssl: {
+  rejectUnauthorized: false
+ }
+});
 
-if(MODE === "dev") {
- const {DB_NAME,DB_PORT,DB_USER,DB_HOST,DB_PWD,} = process.env;
-
- config = {
-  host: DB_HOST,
-  port: DB_PORT,
-  database: DB_NAME,
-  user: DB_USER,
-  password: DB_PWD
- };
-};
-
-if(MODE === "prod") {
- const {DB_URL} = process.env;
-
- config = {
-  connectionString: DB_URL,
-  ssl: {rejectUnauthorized: false,}
- };
-};
-
-const pg = new Client(config);
+pg.connect(() => console.log("CONNECTED_PG"));
 
 pg.on("error",(err) => console.log(err));
 
