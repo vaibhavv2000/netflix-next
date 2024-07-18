@@ -23,6 +23,7 @@ const Main = () => {
  },[error]);
 
  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  if(loading) return;
   e.preventDefault();
   const {email,password} = user;
   if(!email || !password) return setError("All fields are required");
@@ -48,7 +49,7 @@ const Main = () => {
  };
 
  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  setUser((p) => ({...p,[e.target.name]: e.target.value}));
+  setUser((p) => ({...p, [e.target.name]: e.target.value}));
  };
 
  return (

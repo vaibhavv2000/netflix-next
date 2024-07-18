@@ -30,7 +30,9 @@ const Main = () => {
 
  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
   e.preventDefault();
+  if(loading) return;
   const {email,password,name} = user;
+  
   if(!user || !email || !password) return setError("All fields are required");
   if(!validateEmail(email)) return setError("Enter a valid email");
   if(password.length < 6) return setError("Password should be minimum 6 characters");
