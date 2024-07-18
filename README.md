@@ -1,4 +1,4 @@
-# Official Website - https://netflix-next-pearl.vercel.app/home
+# Official Website - https://netflix-next-pearl.vercel.app/
 
 # netflix fullstack application created using NextJS 14
 
