@@ -31,10 +31,7 @@ const Lists = (props: props) => {
  }, [movies]);
 
  useEffect(() => {
-  if(title === "My List") {
-   let list = movies.filter(item => wishlist.includes(item.id));
-   setList(list); 
-  };
+  if(title === "My List") setList(movies.filter(item => wishlist.includes(item.id)));
  }, [wishlist, movies]);
 
  return (
