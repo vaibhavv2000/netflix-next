@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
  
   cookies().set("netflix-user", token, cookieOptions);
   
-  return NextResponse.json({id, email, name},{status: 201});
+  return NextResponse.json({user: {id, email, name, wishlist: []}, token},{status: 201});
  } catch (error) {
   return NextResponse.json(error, {status: 500});
  };

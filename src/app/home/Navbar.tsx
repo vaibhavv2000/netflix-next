@@ -53,7 +53,7 @@ const Navbar = () => {
    <div className="flex items-center space-x-5 z-[83838833]">
     <Image
      src={"https://assets.stickpng.com/images/580b57fcd9996e24bc43c529.png"}
-     alt={"Official_logo"}
+     alt={"Official Logo"}
      width={160}
      className="cursor-pointer"
      height={10}

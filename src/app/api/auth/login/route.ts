@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
   const {wishlist, id, name} = user;
 
-  return NextResponse.json({id, email, name, wishlist},{status: 200});
+  return NextResponse.json({user: {id, email, name, wishlist}, token},{status: 200});
  } catch (error) {
   return NextResponse.json(error, {status: 500});
  };

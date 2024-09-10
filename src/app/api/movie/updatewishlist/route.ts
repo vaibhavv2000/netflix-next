@@ -1,16 +1,17 @@
 import pg from "@/lib/pg";
-import JWT from "@/utils/JWT";
-import {cookies} from "next/headers";
+import {getUser} from "@/utils/JWT";
+import type {user} from "@/utils/types";
 import {type NextRequest, NextResponse} from "next/server";
 
 export async function PATCH({nextUrl}: NextRequest) {
- const cookie = cookies().get("netflix-user")?.value;
- const {id} = JWT.decode(cookie as string) as {id: number};
+ const {id} = getUser() as user;
+
+ if(!id) return NextResponse.json({message: "Unauthorized"}, {status: 401});
+
  const movieId = nextUrl.searchParams.get("id");
  const add = nextUrl.searchParams.get("add");
 
- if(!id || !movieId)
-  return NextResponse.json({message: "All fields are required"}, {status: 400});
+ if(!movieId) return NextResponse.json({message: "All fields are required"}, {status: 400});
 
  let query = "";
 

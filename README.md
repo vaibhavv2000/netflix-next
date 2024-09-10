@@ -3,7 +3,6 @@
 # Netflix Full Stack application created using NextJS 14
 
 # Tech stack includes NextJS 14 + PostgreSQL + Typescript + tailwindCSS + Redux
-# PostgreSQL is hosted on render.com
 
 # The app is hosted on vercel.com
 

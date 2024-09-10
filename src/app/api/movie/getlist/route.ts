@@ -1,18 +1,14 @@
 import pg from "@/lib/pg";
-import JWT from "@/utils/JWT";
-import {cookies} from "next/headers";
+import {getUser} from "@/utils/JWT";
+import type {user} from "@/utils/types";
 import {NextResponse} from "next/server";
 
 export async function GET() {
- const cookie = cookies().get("netflix-user")?.value;
- const {id} = JWT.decode(cookie as string) as {id: number};
+ const {id} = getUser() as user;
+ if(!id) return NextResponse.json({message: "Unauthorized"},{status:401});
 
- if(!id) return NextResponse.json({message: "All fields are required"},{status:400});
-
- let query = `
-  SELECT m.* FROM wishlist INNER JOIN movies m 
-  ON wishlist.movieId = m.id WHERE wishlist.userId = $1
- `;
+ let query = `SELECT m.* FROM wishlist INNER JOIN movies m 
+  ON wishlist.movieId = m.id WHERE wishlist.userId = $1`;
 
  try {
   const {rows} = await pg.query(query,[id]);

@@ -43,7 +43,7 @@ const Main = () => {
   try {
    const res = await API.post("/auth/login", user);
    localStorage.setItem("netflix-auth", "true");
-   dispatch(login(res.data));
+   dispatch(login(res.data.user));
    push("/home");
   } catch (error: any) {
    setError(error?.response?.data?.message);
