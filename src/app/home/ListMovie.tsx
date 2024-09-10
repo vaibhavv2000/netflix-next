@@ -1,17 +1,15 @@
-import {MouseEvent,memo,useRef,SetStateAction} from "react";
-import {movie} from "./Featured";
+import {MouseEvent,memo,useRef} from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-let thumbnail = `h-60 w-40 md:h-40 md:w-[270px] rounded-md hover:opacity-60 cursor-pointer relative`;
+import type {movie, position} from "@/utils/types";
 
 interface props {
  movie: movie;
- setPos: React.Dispatch<SetStateAction<any>>;
+ handleSetPosition: (position: position | null) => void;
 };
 
 const ListMovie = (props: props) => {
- const {movie,setPos} = props;
+ const {movie, handleSetPosition} = props;
 
  const movieRef = useRef<HTMLDivElement>(null);
 
@@ -23,12 +21,16 @@ const ListMovie = (props: props) => {
    top = e.target.offsettTop
   });
 
-  setPos({x: event.clientX,y: top,movie});
+  handleSetPosition({x: event.clientX,y: top,movie});
  };
 
  return (
-  <div ref={movieRef} onMouseEnter={mouseHovered} className={thumbnail}>
-   <Link href={{pathname: "/video",query: {id: movie.id}}} className="h-full w-full">
+  <div 
+   ref={movieRef} 
+   onMouseEnter={mouseHovered} 
+   className={`h-60 w-40 md:h-40 md:w-[270px] rounded-md hover:opacity-60 cursor-pointer relative`}
+  >
+   <Link className="h-full w-full" href={{pathname: "/video",query: {id: movie.id}}}>
     <Image
      src={movie.thumbnail}
      className="h-full w-full rounded-md object-cover"

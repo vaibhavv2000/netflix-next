@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
  
 export default function NotFound() {
  return (
@@ -8,7 +8,9 @@ export default function NotFound() {
     <p className='text-lg my-2 text-white/80'>
      The page you request currently does not exist.
     </p>
-    <Link href="/" className='underline text-blue-500 text-center'>Return Home</Link>
+    <Link href="/" className='underline text-blue-500 text-center'>
+     Return Home
+    </Link>
    </div>
   </main>
  );

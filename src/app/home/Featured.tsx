@@ -7,72 +7,41 @@ import Link from "next/link";
 import {FiMinus} from "react-icons/fi";
 import Navbar from "./Navbar";
 import {useAppDispatch, useAppSelector} from "@/lib/redux";
-import {addMovieToMyList, removeMovie} from "@/redux/slices/movieSlice";
 import {API} from "@/lib/API";
-
-export interface movie {
- id: number;
- description: string;
- genre: string;
- length: number;
- movie_name: string;
- pg: boolean;
- rating: number;
- release_year: number;
- thumbnail: string;
- title_img: string;
- type: string;
-};
-
-export interface state {
- x: number;
- y: number;
- movie: movie;
-};
+import type {movie, position} from "@/utils/types";
+import {updateWishlist} from "@/redux/userSlice";
 
 interface props {
- setPos?: React.Dispatch<React.SetStateAction<state | null>>;
+ handleSetPosition: (position: position | null) => void;
 };
 
-const Featured = ({setPos}: props): JSX.Element => {
- const [movie,setMovie] = useState<movie | null>();
- const {moviesList, myList} = useAppSelector(state => state.movie);
+const Featured = ({handleSetPosition}: props) => {
+ const [movie,setMovie] = useState<movie>();
  const [isInMyList, setIsInMyList] = useState(false);
- const email = useAppSelector(state => state.user.user?.email);
+ const {movies} = useAppSelector(state => state.movie);
+ const {wishlist} = useAppSelector(state => state.user.user);
 
  const dispatch = useAppDispatch();
 
  useEffect(() => {
-  const movies = [...moviesList];
-  const movie = movies[Math.floor(Math.random() * movies.length)];
-  setMovie(movie);
-
- },[moviesList]);
+  setMovie(movies[Math.floor(Math.random() * movies.length)]);
+ },[movies]);
 
  useEffect(() => {
   if(!movie) return;
+  setIsInMyList(wishlist.includes(movie.id));
+ }, [wishlist, movie]);
 
-  const movieExists = myList.find(item => item.id === movie.id);
-  if(movieExists) setIsInMyList(true);
-  else setIsInMyList(false);
- }, [myList, movie]);
- 
- const updateMyList = async (opt: "add" | "remove") => {
+ const handleUpdateWishlist = async (option: boolean) => {
   if(!movie) return;
-
-  if(opt === "add") {
-   dispatch(addMovieToMyList(movie));
-   await API.post("/movie/addtowishlist",{email,movieId: movie.id});
-  } else {
-   dispatch(removeMovie(movie.id));
-   await API.post("/movie/removefromwishlist",{email,movieId: movie.id});
-  };
+  dispatch(updateWishlist({id: movie.id, add: !option}));
+  await API.patch(`/movie/updatewishlist?id=${movie.id}&add=${!option}`);
  };
 
  if(!movie) return <Navbar />;
 
  return (
-  <div onMouseEnter={() => setPos && setPos(null)}>
+  <div onMouseEnter={() => handleSetPosition(null)}>
    <Navbar />
    <div className="relative h-96 sm:h-[420px] md:h-[550px] lg:h-[700px] bg-no-repeat">
     <div className="absolute md:left-10 left-2 md:top-[50%] w-80 sm:w-96 z-10 translate-y-[-40%] md:translate-y-[-50%] top-[50%] xxl:scale-150 xxl:left-40">
@@ -102,7 +71,7 @@ const Featured = ({setPos}: props): JSX.Element => {
        size="large"
        // sx={{background: "#999","&:hover": {background: "#999"}}}
        sx={{backgroundColor: "#888"}}
-       onClick={() => updateMyList(isInMyList ? "remove" : "add")}
+       onClick={() => handleUpdateWishlist(isInMyList)}
        startIcon={isInMyList ? <FiMinus size={23} color={"#fff"} /> : <GoPlus size={23} color={"#fff"} />}
       >
        MY LIST
@@ -116,7 +85,7 @@ const Featured = ({setPos}: props): JSX.Element => {
      className="h-full w-full object-cover"
     />
     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[rgba(0,0,0,0.17777)] to-[rgba(0,0,0,0.377777)]"></div>
-    </div>
+   </div>
   </div>
  );
 };

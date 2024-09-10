@@ -1,5 +1,5 @@
-import {movie} from "@/lib/moviesList";
 import pg from "@/lib/pg";
+import type {movie} from "@/utils/types";
 import {NextRequest, NextResponse} from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
    ]
   );
 
-  return NextResponse.json({message: "Movie Added"},{status: 201});
+  return NextResponse.json({success: true},{status: 201});
  } catch(error) {
   return NextResponse.json(error,{status: 500});
  };

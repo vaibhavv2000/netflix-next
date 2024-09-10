@@ -1,48 +1,50 @@
-import {useState,useEffect,memo,SetStateAction,useRef} from "react";
-import {movie} from "./Featured";
+import {useState,useEffect,memo,useRef} from "react";
 import ListMovie from "./ListMovie";
 import {SlArrowLeft,SlArrowRight} from "react-icons/sl";
 import {Typography} from "@mui/material";
 import {useAppSelector} from "@/lib/redux";
-
-let arrow = "absolute h-full w-14 bg-[rgba(0,0,0,0.5)] md:!grid place-items-center z-[999999] hidden top-0";
+import type {movie, position} from "@/utils/types";
 
 interface props {
  title: string;
- setPos: React.Dispatch<SetStateAction<any>>;
+ handleSetPosition: (position: position  | null) => void;
 }
 
 const Lists = (props: props) => {
- const {title, setPos} = props;
- const [movies, setMovies] = useState<movie[]>([]);
+ const {title, handleSetPosition} = props;
+ const [list, setList] = useState<movie[]>([]);
  const [slideNum, setSlideNum] = useState<number>(0);
 
  const moviesRef = useRef<HTMLDivElement>(null);
- const {moviesList, myList} = useAppSelector(state => state.movie);
+ const {movies} = useAppSelector(state => state.movie);
+ const {wishlist} = useAppSelector(state => state.user.user);
 
- const slide = (opt: "left" | "right") => {
+ const slide = (option: "left" | "right") => {
   const {width} = moviesRef.current?.getBoundingClientRect() as DOMRect;
 
-  if(opt === "left" && slideNum > 0) setSlideNum((p) => p - 200);
-  if(opt === "right" && slideNum < width + 300) setSlideNum((p) => p + 200);
+  if(option === "left" && slideNum > 0) setSlideNum(prev => prev - 200);
+  if(option === "right" && slideNum < width + 300) setSlideNum(prev => prev + 200);
  };
 
  useEffect(() => {
-  if(title !== "My List") setMovies([...moviesList].sort((a,b) => Math.random() - 0.5));
- }, [moviesList]);
+  if(title !== "My List") setList([...movies].sort(() => Math.random() - 0.5));
+ }, [movies]);
 
  useEffect(() => {
-  if(title === "My List") setMovies(myList);
- }, [myList]);
+  if(title === "My List") {
+   let list = movies.filter(item => wishlist.includes(item.id));
+   setList(list); 
+  };
+ }, [wishlist, movies]);
 
  return (
-  <div className="p-3 transition-all" onMouseEnter={() => setPos(null)}>
+  <div className="p-3 transition-all" onMouseEnter={() => handleSetPosition(null)}>
    <Typography variant="h6" className="text-white" sx={{my: 1}}>
     {title}
    </Typography>
    <div ref={moviesRef} className="overflow-x-scroll md:overflow-x-hidden relative">
     {movies.length > 3 && (
-     <div className={`${arrow} left-0`}>
+     <div className={`arrow left-0`}>
       <SlArrowLeft
        size={40}
        color="#fff"
@@ -54,15 +56,17 @@ const Lists = (props: props) => {
     <div
      className="w-max flex items-center space-x-3 md:space-x-2"
      style={{transform: `translateX(${-slideNum}px)`}}
-     onBlur={() => setPos(null)}
+     onBlur={() => handleSetPosition(null)}
     >
-     {!movies.length && <div>
+     {!list.length && <div>
       <h1 className="text-red-600 font-medium text-3xl">List Empty</h1>
       </div>}
-     {movies.length > 0 ? movies.map((m) => <ListMovie key={`${m.id}-movie`} movie={m} setPos={setPos} />) : null}
+     {list.length > 0 && list.map((movie) => (
+      <ListMovie key={`${movie.id}-movie`} movie={movie} handleSetPosition={handleSetPosition} />
+     ))}
     </div>
     {movies.length > 3 && (
-     <div className={`${arrow} right-0`}>
+     <div className={`arrow right-0`}>
       <SlArrowRight
        size={40}
        color="#fff"
@@ -73,13 +77,9 @@ const Lists = (props: props) => {
     )}
    </div>
    <style jsx>
-    {
-      `
-       * {
-        transition: all 0.2s ease-in; 
-       }
-      `
-    }
+    {`
+     * { transition: all 0.2s ease-in; }
+    `}
    </style>
   </div>
  ); 

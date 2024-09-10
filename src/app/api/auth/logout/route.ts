@@ -3,5 +3,5 @@ import {NextResponse} from "next/server";
 
 export async function DELETE() {
  cookies().delete("netflix-user");
- return NextResponse.json("Logged out",{status: 200});
+ return NextResponse.json({success: true},{status: 200});
 };

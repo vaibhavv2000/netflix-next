@@ -1,22 +1,22 @@
 import {cookies} from 'next/headers';
-import {NextResponse} from 'next/server'
-import {NextRequest} from 'next/server'
+import {type NextRequest, NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
- let pathname = request.nextUrl.pathname;
- const cookie = cookies().get("netflix-user") as any;
+export async function middleware(request: NextRequest) {
+ const path = request.nextUrl.pathname;
+ const cookie = cookies().get('netflix-user')?.value;
 
- if(["/", "/register"].includes(pathname)) {
-  if(cookie) return NextResponse.redirect(new URL('/home',request.url));
- } else if(["/home", "/video"].includes(pathname)) {
-  if(!cookie) return NextResponse.redirect(new URL('/',request.url));
- } else {
-  if(cookie) return NextResponse.redirect(new URL('/home',request.url));
-  else return NextResponse.redirect(new URL('/',request.url));
+ if(cookie) {
+  if(["/", "/register"].includes(path))
+   return NextResponse.redirect(new URL('/home', request.url));
  };
+
+ if(!cookie) {
+  if(["/home", "/video"].includes(path)) return NextResponse.redirect(new URL('/', request.url));
+ };
+
+ return NextResponse.next();
 };
 
 export const config = {
- // matcher: ["/", "/register", "/home", "/video"],
- matcher: [ '/((?!api|_next/static|_next/image|favicon.ico).*)',]
+  matcher: ['/', '/register', '/home', '/video'],
 };

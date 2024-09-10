@@ -1,7 +1,6 @@
 "use client";
 
-import {useEffect,useState} from "react";
-import {movie} from "../home/Featured";
+import {Fragment, useEffect,useState} from "react";
 import {Typography} from "@mui/material";
 import {IoMdTime} from "react-icons/io";
 import {AiFillStar,AiOutlineHeart,AiFillHeart} from "react-icons/ai";
@@ -11,67 +10,52 @@ import {FaPlay} from "react-icons/fa";
 import {useAppDispatch, useAppSelector} from "@/lib/redux";
 import {useRouter} from "next/navigation";
 import Recommendations from "./Recommendations";
-import {addMovieToMyList, removeMovie} from "@/redux/slices/movieSlice";
 import Image from "next/image";
+import type {movie} from "@/utils/types";
+import {updateWishlist} from "@/redux/userSlice";
 
 const Video = ({id}: {id: string}) => {
  const [movie,setMovie] = useState<movie>();
  const [isInList,setIsInList] = useState<boolean>(false);
  const [play,setPlay] = useState<boolean>(false);
- const [randomMovies,setRandomMovies] = useState<movie[]>([]);
+ const [suggestions,setSuggestions] = useState<movie[]>([]);
  const [isHovered, setIsHovered] = useState(false);
 
  const {push} = useRouter();
 
- const {myList,moviesList} = useAppSelector(state => state.movie);
- const email = useAppSelector(state => state.user.user?.email);
+ const {movies} = useAppSelector(state => state.movie);
+ const {email, wishlist} = useAppSelector(state => state.user.user);
 
  if(!id || !email) push("/home");
 
  const dispatch = useAppDispatch();
 
  useEffect(() => {
-  const isMovie = [...myList].find((m) => String(m.id) === String(id));
-
-  if(isMovie) setIsInList(true);
-  else setIsInList(false);
+  setIsInList(wishlist.includes(Number(id)));
   setPlay(false);
 
-  const getMovie = [...moviesList].find((m) => String(m.id) === String(id));
-
+  const getMovie = movies.find((movie) => String(movie.id) === String(id));
   setMovie(getMovie);
   
-  const rM = [...moviesList]
+  const randomMovies = movies
    .filter((m) => String(m.id) !== String(id))
-   .sort((a,b) => Math.random() - 0.5)
+   .sort(() => Math.random() - 0.5)
    .slice(0,5);
 
-  setRandomMovies(rM);
+  setSuggestions(randomMovies);
 
   document.title = `Movie - ${getMovie?.movie_name}`;
- }, [moviesList, id]);
+ }, [movies, id]);
 
- const handleMovie = async (like: boolean,id: number) => {
-  const movieId = id;
-
-  try {
-   if(!like) { 
-    dispatch(removeMovie(id));
-    setIsInList(false);
-    await API.post("/movie/removefromwishlist",{email,movieId});
-   } else {
-    dispatch(addMovieToMyList(movie));
-    setIsInList(true);
-    await API.post("/movie/addtowishlist",{email,movieId});
-   };
-
-  } catch(error: any) {
-   console.log("Error",error.response.data);
-  };
+ const handleMovie = async (option: boolean, id: number) => {
+  setIsInList(option);
+  if(!movie) return;
+  dispatch(updateWishlist({id, add: option}));
+  await API.patch(`/movie/updatewishlist?id=${id}&${option && "add=true"}`);
  };
 
  return (
-  <main className="bg-black min-h-screen">
+  <Fragment>
    <div 
     className="h-80 md:h-[500px] lg:h-[700px]" 
     onMouseOver={() => setIsHovered(true)} 
@@ -90,7 +74,12 @@ const Video = ({id}: {id: string}) => {
      />
     </div>}
     {play ? (
-     <video src="https://player.vimeo.com/external/325310326.sd.mp4?s=b2285047311c7d6d8cc2bfc0c62704563b630c65&profile_id=164&oauth2_token_id=57447761" autoPlay controls className="w-full h-full"></video>
+     <video 
+      src="https://player.vimeo.com/external/325310326.sd.mp4?s=b2285047311c7d6d8cc2bfc0c62704563b630c65&profile_id=164&oauth2_token_id=57447761" 
+      autoPlay 
+      controls 
+      className="w-full h-full"
+     ></video>
     ) : (
      <div
       style={{
@@ -168,10 +157,12 @@ const Video = ({id}: {id: string}) => {
    </div>
    {/*  */}
    <div className="p-5 flex flex-col space-y-4">
-    <h2 className="text-2xl mb:text-3xl font-medium font-inter text-white">Recommendations For You</h2>
-    <Recommendations randomMovies={randomMovies} />
+    <h2 className="text-2xl mb:text-3xl font-medium font-inter text-white">
+     Recommendations For You
+    </h2>
+    <Recommendations suggestions={suggestions} />
    </div>
-  </main>
+  </Fragment>
  );
 };
 

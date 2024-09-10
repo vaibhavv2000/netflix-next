@@ -8,20 +8,14 @@ import {FaPlay} from "react-icons/fa";
 import {GoStar} from "react-icons/go";
 import {IoMdTime} from "react-icons/io";
 import {SlCalender} from "react-icons/sl";
-import {movie} from "./Featured";
+import type {position} from "@/utils/types";
 
 interface props {
-  pos: {
-    x: number;
-    y: number;
-    movie: movie;
-  };
+ position: position;
 };
 
-const MovieCard = ({pos}: props) => {
- const {x,y,movie} = pos;
-
- if(!pos) return null;
+const MovieCard = ({position}: props) => {
+ const {x,y,movie} = position;
 
  return (
   <Card
@@ -77,11 +71,7 @@ const MovieCard = ({pos}: props) => {
       </Typography>
      </div>
     </div>
-    <Typography
-     variant="body2"
-     // color="text.secondary"
-     className="text-white"
-    >
+    <Typography variant="body2" className="text-white">
      {movie.description}
     </Typography>
    </CardContent>

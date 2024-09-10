@@ -7,13 +7,14 @@ import {AppRouterCacheProvider} from '@mui/material-nextjs/v13-appRouter';
 const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
-  title: "Sign In",
-  description: "",
+ title: "Netflix",
+ description: "Stream your favorite movies and TV shows on Netflix. Watch anytime, anywhere.",
+ keywords: "Netflix, streaming, movies, TV shows, entertainment",
 };
 
 interface props {
-  children: React.ReactNode;
-}
+ children: React.ReactNode;
+};
 
 function RootLayout({children}: Readonly<props>) {
  return (
@@ -27,6 +28,6 @@ function RootLayout({children}: Readonly<props>) {
    </body>
   </html>
  );
-}
+};
 
 export default RootLayout;

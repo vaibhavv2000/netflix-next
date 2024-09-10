@@ -1,69 +1,51 @@
 "use client";
 
 import {useEffect,useState} from "react";
-import Featured,{movie} from "./Featured";
+import Featured from "./Featured";
 import Lists from "./Lists";
 import MovieCard from "./MovieCard";
 import {API} from "@/lib/API";
-import {addMovies, addMyList} from "@/redux/slices/movieSlice";
+import {addMovies} from "@/redux/movieSlice";
 import {useAppDispatch, useAppSelector} from "@/lib/redux";
 import Loader from "@/components/Loader";
+import type { position} from "@/utils/types";
+import {useRouter} from "next/navigation";
 
 let lists = [
 "Featured Movies","New Releases","Popular Movies","Horror Thriller","Comedy Movies","My List"
 ];
 
-export interface state {
- x: number;
- y: number;
- movie: movie;
-};
-
 const Main = () => {
- const [pos,setPos] = useState<state | null>(null);
+ const [position,setPosition] = useState<position | null>(null);
 
- const {moviesList} = useAppSelector(state => state.movie);
+ const {movies} = useAppSelector(state => state.movie);
  const dispatch = useAppDispatch();
+ const {push} = useRouter();
 
  useEffect(() => {
-  const u = localStorage.getItem("netflix-user") as string;
-  let user = JSON.parse(u);
-
   async function fetcher() {
    try {
-    const movies = async () => {
-     let res = await API.get(`/movie/movies`);
-     let data = await res.data;
-     return data;
-    };
-  
-    const userList = async () => {
-     let res = await API.get(`/movie/getlist?email=${user.email}`);
-     let data = await res.data;
-     return data;
-    };
-  
-    const data: [[],[]] = await Promise.all([movies(),userList()]);
-
-    dispatch(addMovies(data[0]));
-    dispatch(addMyList(data[1]));
+    let {data} = await API.get(`/movie/movies`);
+    dispatch(addMovies(data));
    } catch(error: any) {
-    console.log("ERROR",error);
+    push("/");
    };
   };
 
-  if(moviesList.length < 1) fetcher();
- },[moviesList]);
+  if(movies.length < 1) fetcher();
+ },[movies]);
+
+ const handleSetPosition = (position: position | null) => setPosition(position);
 
  return (
-  <main className="bg-black" style={{maxWidth: "2350px",margin: "auto"}}>
-   {moviesList.length ? <>
-    <Featured setPos={setPos} />
-    {moviesList.length && lists.map((l: string,i: number) => <Lists title={l} setPos={setPos} key={`list-${i}`} />)}
-    {pos && <MovieCard pos={pos} />}
-    </> : <div className="grid place-items-center h-screen"><Loader /></div>
-   }
-  </main>
+  <>
+   {movies.length && <Featured handleSetPosition={handleSetPosition} />}
+   {movies.length && lists.map((title: string, index: number) => (
+    <Lists title={title} handleSetPosition={handleSetPosition} key={`list-${index}`} />  
+   ))}
+   {!movies.length && <div className="grid place-items-center h-screen"><Loader /></div>}
+   {position && <MovieCard position={position} />}
+   </>
  );
 };
 

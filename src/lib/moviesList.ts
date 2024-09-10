@@ -1,17 +1,6 @@
-export interface movie {
-    movie_name: string;
-    release_year: number;
-    thumbnail: string;
-    rating: number;
-    length: number;
-    title_img: string;
-    pg: boolean;
-    type: string;
-    genre: string;
-    description: string;
-};
+import {movie} from "@/utils/types";
 
-export const movies: movie[] = [
+export const movies: Partial<movie>[] = [
     {
         movie_name: "Joker",
         release_year: 2019,

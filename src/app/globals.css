@@ -32,3 +32,21 @@ body {
   background: red;
  }
 }
+
+@layer components {
+ .navbar {
+  @apply flex items-center bg-[rgba(0,0,0,0.0155555)] justify-between fixed top-0 w-full lg:px-10 z-[9999999999] px-3 md:px-7;
+ }
+
+ .link {
+  @apply text-white font-[600] cursor-pointer hover:underline;
+ }
+
+ .auth-link {
+  @apply text-white text-[13px] font-medium text-center cursor-pointer hover:opacity-70;
+ }
+
+ .arrow {
+  @apply absolute h-full w-14 bg-[rgba(0,0,0,0.5)] md:!grid place-items-center z-[999999] hidden top-0;
+ }
+}
