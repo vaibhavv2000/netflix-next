@@ -63,7 +63,7 @@ const Main = () => {
   >
    <h1 className="text-center text-[red] font-lora text-5xl font-semibold">Login</h1>
    <input
-    className="border-none font-medium outline-none p-3 text-[14px] text-black w-[95%] xs:w-full"
+    className={"input"}
     placeholder="Email"
     onChange={handleChange}
     name="email"
@@ -71,7 +71,7 @@ const Main = () => {
    <div className="relative">
     <input
      type={showPassword ? "text" : "password"}
-     className="border-none font-medium xs:w-full outline-none p-3 text-[14px] text-black pr-10 w-[95%]"
+     className={"input"}
      placeholder="Password"
      onChange={handleChange}
      name="password"
@@ -85,7 +85,7 @@ const Main = () => {
    </div>
    {error && <p className="text-red-600 text-sm -my-3 font-semibold">{error}</p>}
    <button className="bg-[red] hover:bg-red-600 text-white border-none font-lora flex items-center outline-none p-2.5 font-bold justify-center gap-2">
-    Login {loading && <span className="scale-50"><Loader color="#fff" scale={0.4} /></span>}
+    Login {loading && <span className="scale-50"><Loader color="#fff" size={24} /></span>}
    </button>
    <p className="-my-2 text-center text-sm text-white">
     <span className="mr-2 text-white/80">Don&apos;t have an Account?</span>

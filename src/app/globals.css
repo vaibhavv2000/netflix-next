@@ -34,6 +34,10 @@ body {
 }
 
 @layer components {
+ .input {
+  @apply border-none font-medium xs:w-full outline-none p-3 text-[14px] text-black pr-10 w-[95%];
+ }
+
  .navbar {
   @apply flex items-center bg-[rgba(0,0,0,0.0155555)] justify-between fixed top-0 w-full lg:px-10 z-[9999999999] px-3 md:px-7;
  }

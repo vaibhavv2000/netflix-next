@@ -3,8 +3,8 @@ import Main from './Main';
 
 export const metadata: Metadata = {
  title: "Video",
- description: "",
- keywords: "",
+ description: "Watch your favorite movies and TV shows online in HD quality",
+ keywords: "movies, TV shows, online, HD quality, watch online"
 };
 
 interface props {
