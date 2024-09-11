@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import {type NextRequest, NextResponse} from "next/server";
 import type {userTypes} from "@/utils/types";
 import JWT from "@/utils/JWT";
+import {validateEmail} from "@/lib/emailValidator";
 
 export async function POST(request: NextRequest) {
  let {email, password, name} = await request.json() as userTypes;
@@ -15,6 +16,15 @@ export async function POST(request: NextRequest) {
 
  if(!email || !name || !password)
   return NextResponse.json({message: "All fields are necessary"}, {status: 400});
+
+ if(!validateEmail(email))
+  return NextResponse.json({message: "Email is Invalid"}, {status: 400});  
+  
+ if(password.length < 8) 
+  return NextResponse.json({message: "Password must have 8 characters"}, {status: 400});
+  
+ if(password.includes(" "))
+  return NextResponse.json({message: "Password should not include spaces"}, {status: 400});
 
  try {
   const {rows} = await pg.query(`SELECT email FROM users WHERE email = $1`, [email]);

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({message: "Password must have 8 characters"}, {status: 400});
 
  if(password.includes(" "))
-  return NextResponse.json({message: "Password should not includes character ' '"}, {status: 400});
+  return NextResponse.json({message: "Password should not include spaces"}, {status: 400});
 
  try {
   const {rows: [user]} = await pg.query(`SELECT * FROM users WHERE email = $1`, [email]);

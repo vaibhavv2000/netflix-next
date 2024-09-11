@@ -15,7 +15,7 @@ const JWT = {
 export const getUser = () => {
  let cookie = cookies().get("netflix-user")?.value;
  let token = headers().get('Authorization')?.split(" ")[1] as string;
- if(!cookie && !null) return {};
+ if(!cookie && !token) return {};
  const user = jwt.decode(cookie || token) as user;
  return user;
 };
